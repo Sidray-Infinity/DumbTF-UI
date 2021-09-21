@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, IconButton, Icon, Typography } from "@material-ui/core";
+import { Grid, IconButton, Icon } from "@material-ui/core";
 import Layer from "../playground-src/Layer";
 
 export default class Network extends Component {
