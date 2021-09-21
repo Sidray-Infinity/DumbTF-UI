@@ -80,6 +80,7 @@ export default class Network extends Component {
     console.log(this.state.nodeStates);
     return (
       <div>
+        <h1>testing bruh</h1>
         <Grid // Layer addition/removal buttons grid
           container
           style={{
