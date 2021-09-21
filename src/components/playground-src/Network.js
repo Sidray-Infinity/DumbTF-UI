@@ -22,50 +22,8 @@ export default class Network extends Component {
       edgesRendered: false,
 
       nodeStates: [],
+      maxHiddenLayersThreshold: 5,
     };
-  }
-
-  addLineComp(x1, x2, y1, y2) {
-    return <line x1={x1} y1={y1} x2={x2} y2={x2} stroke="black"></line>;
-  }
-
-  computeEdges() {
-    // Layers have been mounted, compute the edges
-
-    var edges = [];
-
-    if (this.state.hidLayers.length > 0) {
-      this.state.hidLayers.map((layer, index) => {
-        if (index === 0) {
-          // Make lines with input layer
-
-          console.log(this.state.inputLayerRef.current);
-        }
-
-        if (index === this.state.hidLayers.length - 1) {
-          // Make lines with output layer
-        } else {
-          // Inter hidden layer connections
-        }
-      });
-    } else {
-      // No  hidden layers; just connect input and output layers
-      var ipNodeRefs = this.state.inputLayerRef.current.state.nodeRefs;
-      var opNodeRefs = this.state.outputLayerRef.current.state.nodeRefs;
-      const nodeStates = [];
-
-      // calculate position of node by name for input layer
-      for (let i = 0; i < ipNodeRefs.length; i++)
-        nodeStates.push(
-          this.calculateNodePositionByName(ipNodeRefs[i].current.props.name)
-        );
-      for (let j = 0; j < opNodeRefs.length; j++)
-        nodeStates.push(
-          this.calculateNodePositionByName(opNodeRefs[j].current.props.name)
-        );
-
-      this.setState({ edges: edges, nodeStates: nodeStates });
-    }
   }
 
   calculateNodePositionByName(name) {
@@ -79,31 +37,15 @@ export default class Network extends Component {
     return nodeStateObject;
   }
 
-  renderLines() {
-    return <svg>{this.state.edges}</svg>;
-  }
-
-  componentDidMount() {
-    if (this.state.edges.length > 0) {
-      if (!this.state.edgesRendered) {
-        // Edges have been computed, render them; set edgesRendered = true
-      } else {
-        // Edges have already been rendered
-      }
-    } else {
-      this.computeEdges();
-    }
-  }
-
   addLayerComp(name, ref) {
     return <Layer name={name} ref={ref}></Layer>;
   }
 
   addLayer() {
     var stateObject = {};
-    stateObject["hidLayersCount"] = Math.min(6, this.state.hidLayersCount + 1);
+    stateObject["hidLayersCount"] = Math.min(this.state.maxHiddenLayersThreshold + 1, this.state.hidLayersCount + 1);
 
-    if (stateObject["hidLayersCount"] < 6) {
+    if (stateObject["hidLayersCount"] < (this.state.maxHiddenLayersThreshold + 1)) {
       var hidLayers = this.state.hidLayers;
       var hidLayersRefs = this.state.hidLayersRefs;
 
@@ -116,9 +58,6 @@ export default class Network extends Component {
       stateObject["hidLayersRefs"] = hidLayersRefs;
       stateObject["hidLayers"] = hidLayers;
 
-      // So that edges are recomputed
-      stateObject["edges"] = [];
-      stateObject["edgesRendered"] = false;
       this.setState(stateObject);
     }
   }
@@ -133,11 +72,6 @@ export default class Network extends Component {
       hidLayers.pop();
       stateObject["hidLayers"] = hidLayers;
       stateObject["hidLayersRefs"] = hidLayersRefs;
-
-      // So that edges are recomputed
-      stateObject["edges"] = [];
-      stateObject["edgesRendered"] = false;
-      this.setState(stateObject);
     }
   }
 
@@ -145,7 +79,7 @@ export default class Network extends Component {
     console.log(this.state.nodeStates);
     return (
       <div>
-        <Grid
+        <Grid // Layer addition/removal buttons grid
           container
           style={{
             //backgroundColor: "#ee3eee",
@@ -155,7 +89,7 @@ export default class Network extends Component {
           justify="center"
           alignItems="center"
         >
-          <Grid item xs>
+          <Grid item spacing={1}>
             <IconButton onClick={() => this.addLayer()}>
               <Icon
                 style={{
@@ -166,7 +100,7 @@ export default class Network extends Component {
               </Icon>
             </IconButton>
           </Grid>
-          <Grid item xs>
+          <Grid item spacing={1}>
             <IconButton onClick={() => this.removeLayer()}>
               <Icon
                 style={{
@@ -177,13 +111,8 @@ export default class Network extends Component {
               </Icon>
             </IconButton>
           </Grid>
-          <Grid item xs>
-            <Typography>
-              {this.state.hidLayerCount} Hidden layerNames
-            </Typography>
-          </Grid>
         </Grid>
-        <Grid
+        <Grid // Network grid
           container
           style={{
             height: "35vw",
@@ -199,13 +128,6 @@ export default class Network extends Component {
             <React.Fragment key={index}>{layer}</React.Fragment>
           ))}
           {this.state.outputLayer}
-          {console.log(this.state.edges)}
-          <svg>
-            {this.state.edges.map((edge, index) => {
-              return edge;
-            })}
-            <line x1="0" y1="0" x2="1000" y2="2000" stroke="black"></line>
-          </svg>
         </Grid>
       </div>
     );

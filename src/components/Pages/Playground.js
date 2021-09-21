@@ -175,10 +175,11 @@ export default class Playground extends Component {
               </TextField>
             </Grid>
           </Grid>
-          
+
           {/* DEFINING NETWORK */}
           <Network ref={this.state.networkRef}></Network>
-          {console.log(this.state.networkRef)}
+          {console.log("FROM playground.js", this.state.networkRef)}
+
         </Grid>
       </div>
     );

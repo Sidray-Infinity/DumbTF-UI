@@ -6,7 +6,6 @@ export default class Node extends Component {
   render() {
     return (
       <div id={this.props.name}>
-        {/* <div id={this.props.name} style={rectangle}></div> */}
         <Grid container style={{ width: "30px", height: "40px" }}>
           <svg>
             <rect
