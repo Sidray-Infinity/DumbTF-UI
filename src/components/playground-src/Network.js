@@ -23,6 +23,7 @@ export default class Network extends Component {
 
       nodeStates: [],
       maxHiddenLayersThreshold: 5,
+      minHiddenLayersThreshold: 0,
     };
   }
 
@@ -64,7 +65,7 @@ export default class Network extends Component {
 
   removeLayer() {
     var stateObject = {};
-    if (this.state.hidLayersCount > 0) {
+    if (this.state.hidLayersCount > this.state.minHiddenLayersThreshold) {
       stateObject["hidLayersCount"] = this.state.hidLayersCount - 1;
       var hidLayers = this.state.hidLayers;
       var hidLayersRefs = this.state.hidLayersRefs;

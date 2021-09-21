@@ -15,6 +15,8 @@ export default class Layer extends Component {
       ],
       nodeRefs: nodeRefs,
       nodeState: [],
+      maxNodesThreshold: 9,
+      minNodesThreshold: 1,
     };
   }
 
@@ -23,30 +25,29 @@ export default class Layer extends Component {
   }
 
   addNode() {
-    // TODO : Refactor to the format used in Network
-
     var stateObject = {};
-    stateObject["nodesCount"] = Math.min(10, this.state.nodesCount + 1);
-    if (stateObject["nodesCount"] < 10) {
+    stateObject["nodesCount"] = Math.min(this.state.maxNodesThreshold + 1, this.state.nodesCount + 1);
+    if (stateObject["nodesCount"] < (this.state.maxNodesThreshold + 1)) {
       var nodes = this.state.nodes;
       var nodeRefs = this.state.nodeRefs;
 
-      var newNodeRef = React.createRef();
       var newNodeName = "node:" + stateObject["nodesCount"];
+      var newNodeRef = React.createRef();
 
       nodes.push(this.addNodeComp(newNodeName, newNodeRef));
       nodeRefs.push(newNodeRef);
 
       stateObject["nodes"] = nodes;
       stateObject["nodeRefs"] = nodeRefs;
+      
       this.setState(stateObject);
     }
   }
 
   removeNode() {
     var stateObject = {};
-    stateObject["nodesCount"] = Math.max(0, this.state.nodesCount - 1);
-    if (stateObject["nodesCount"] >= 1) {
+    stateObject["nodesCount"] = Math.max(this.state.minNodesThreshold - 1, this.state.nodesCount - 1);
+    if (stateObject["nodesCount"] >= this.state.minNodesThreshold) {
       var nodes = this.state.nodes;
       var nodeRefs = this.state.nodeRefs;
       nodes.pop();
